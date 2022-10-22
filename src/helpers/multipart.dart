@@ -38,7 +38,7 @@ extension ReadMultipartRequest on Request {
   /// }
   /// ```
   ///
-  /// Listening to this stream will [read] this request, which may only be done
+  /// Listening to this stream will read this request, which may only be done
   /// once.
   ///
   /// Throws a [StateError] if this is not a multipart request (as reported
@@ -72,6 +72,7 @@ class Multipart extends MimeMultipart {
   Multipart(this._originalRequest, this._inner)
       : headers = CaseInsensitiveMap.from(_inner.headers);
 
+  // ignore: unused_field
   final Request _originalRequest;
   final MimeMultipart _inner;
 
@@ -80,6 +81,7 @@ class Multipart extends MimeMultipart {
 
   late final MediaType? _contentType = _parseContentType();
 
+  // ignore: unused_element
   Encoding? get _encoding {
     final contentType = _contentType;
     if (contentType == null) return null;
@@ -103,7 +105,7 @@ class Multipart extends MimeMultipart {
 
   /// Reads the content of this subpart as a string.
   ///
-  /// The optional [encoding] parameter can be used to override the encoding
+  /// The optional encoding parameter can be used to override the encoding
   /// used. By default, the `content-type` header of this part will be used,
   /// with a fallback to the `content-type` of the surrounding request and
   /// another fallback to [utf8] if everything else fails.
