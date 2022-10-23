@@ -9,7 +9,9 @@ environment:
 dependencies:
   dart_frog: ^0.2.0
   get_it: ^7.2.0
+  logging: ^1.1.0
   postgres: ^2.5.2
+  shelf_multipart: ^1.0.0
 
 dev_dependencies:
   mocktail: ^0.3.0

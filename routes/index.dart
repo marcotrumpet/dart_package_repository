@@ -1,42 +1,32 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:dart_frog/dart_frog.dart';
-import 'package:get_it/get_it.dart';
+import 'package:shelf/shelf.dart' as shelf;
+import 'package:shelf_multipart/multipart.dart';
 
-import '../src/database/db_connection.dart';
-import '../src/helpers/multipart.dart';
-import '../src/tables/packages.dart';
-import '../src/tables/packages_versions.dart';
+import '../main.dart';
 
 Future<Response> onRequest(RequestContext context) async {
-  final request = context.request;
+  final result = await Future.value(
+    fromShelfHandler(
+      (request) async {
+        if (!request.isMultipart) {
+          return Future<shelf.Response>.value(shelf.Response.badRequest());
+        }
 
-  if (!request.isMultipart) {
-    return Response(statusCode: 401);
-  }
+        await for (final part in request.parts) {
+          final file = await part.readBytes();
 
-  await for (final part in request.parts) {
-    final file = await part.readBytes();
+          File('./files/file.png').writeAsBytesSync(file);
+        }
 
-    File('./files/file.png').writeAsBytesSync(file);
-  }
+        log.info('file uploaded');
 
-  final result = await GetIt.I<DBConnection>().addNewPackageToDB(
-    pv: PackageVersion(
-      archiveUrl: 'archive url test',
-      packageId: 'ba765dcb-c4bc-42ee-826d-01849c517742',
-      pubspec: '{"testKey": "testValues"}',
-      retracted: false,
-      version: '1.0.0',
-    ),
-    p: Packages(
-      name: 'name',
-      latestVersion: 'latestV',
-      packageId: 'ba765dcb-c4bc-42ee-826d-01849c517742',
+        return Future<shelf.Response>.value(shelf.Response.ok('File uploaded'));
+      },
     ),
   );
 
-  print('$result');
-
-  return Response(body: 'File uploaded');
+  return result.call(context);
 }
