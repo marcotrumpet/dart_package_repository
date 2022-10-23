@@ -12,13 +12,31 @@ Future<Response> onRequest(RequestContext context) async {
     fromShelfHandler(
       (request) async {
         if (!request.isMultipart) {
+          log.severe("${request.url} isn't multipart");
+
           return Future<shelf.Response>.value(shelf.Response.badRequest());
         }
 
         await for (final part in request.parts) {
           final file = await part.readBytes();
 
-          File('./files/file.png').writeAsBytesSync(file);
+          if (file.isEmpty) {
+            log.warning('Missing file');
+
+            return Future<shelf.Response>.value(
+              shelf.Response.badRequest(body: 'Missing file'),
+            );
+          }
+
+          try {
+            File('./files/file.png').writeAsBytesSync(file);
+          } on FileSystemException catch (e) {
+            log.severe(e.message, e.osError);
+
+            return Future<shelf.Response>.value(
+              shelf.Response.internalServerError(body: e.message),
+            );
+          }
         }
 
         log.info('file uploaded');
