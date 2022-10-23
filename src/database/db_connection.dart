@@ -17,8 +17,8 @@ class DBConnection {
     required PackageVersion pv,
     required Packages p,
   }) async {
-    await connection!.query(pv.insertQuery());
-    await connection!.query(p.insertQuery());
+    await connection!.query(pv.insertQuery('packages_versions'));
+    await connection!.query(p.insertQuery('packages'));
     return true;
   }
 }

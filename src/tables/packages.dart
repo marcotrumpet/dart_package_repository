@@ -1,6 +1,6 @@
 import 'abstract_table.dart';
 
-class Packages implements AbstractTable {
+class Packages implements AbstractTable<Packages> {
   Packages({
     required this.name,
     this.isDiscontinued = false,
@@ -15,6 +15,7 @@ class Packages implements AbstractTable {
   final String latestVersion;
   final String packageId;
 
+  @override
   Packages fromJson(Map<String, dynamic> json) {
     return Packages(
       name: json['name'] as String,
@@ -25,6 +26,7 @@ class Packages implements AbstractTable {
     );
   }
 
+  @override
   Map<String, dynamic> toJson(Packages pv) {
     return {
       'name': pv.name,

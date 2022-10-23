@@ -1,6 +1,6 @@
 import 'abstract_table.dart';
 
-class PackageVersion implements AbstractTable {
+class PackageVersion implements AbstractTable<PackageVersion> {
   PackageVersion({
     required this.packageId,
     required this.version,
@@ -15,6 +15,7 @@ class PackageVersion implements AbstractTable {
   final bool retracted;
   final String pubspec;
 
+  @override
   PackageVersion fromJson(Map<String, dynamic> json) {
     return PackageVersion(
       packageId: json['package_id'] as String,
@@ -25,6 +26,7 @@ class PackageVersion implements AbstractTable {
     );
   }
 
+  @override
   Map<String, dynamic> toJson(PackageVersion pv) {
     return {
       'package_id': pv.packageId,
