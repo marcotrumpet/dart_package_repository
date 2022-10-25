@@ -17,26 +17,14 @@ class DBConnection {
     required PackageVersion pv,
     required Packages p,
   }) async {
-    await connection!.query(pv.insertQuery('packages_versions'));
-    await connection!.query(p.insertQuery('packages'));
+    await connection!.query(
+      pv.insertQuery('packages_versions'),
+      substitutionValues: pv.getQueryParamValues(),
+    );
+    await connection!.query(
+      p.insertQuery('packages'),
+      substitutionValues: p.getQueryParamValues(),
+    );
     return true;
   }
 }
-
-
-// final result = await GetIt.I<DBConnection>().addNewPackageToDB(
-//           pv: PackageVersion(
-//             archiveUrl: 'archive url test',
-//             packageId: 'ba765dcb-c4bc-42ee-826d-01849c517742',
-//             pubspec: '{"testKey": "testValues"}',
-//             retracted: false,
-//             version: '1.0.0',
-//           ),
-//           p: Packages(
-//             name: 'name',
-//             latestVersion: 'latestV',
-//             packageId: 'ba765dcb-c4bc-42ee-826d-01849c517742',
-//           ),
-//         );
-
-//         print('$result');
